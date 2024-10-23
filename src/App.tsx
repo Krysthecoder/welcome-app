@@ -1,35 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from 'react';
+import './App.css';
+import MessageCounter from './components/MessageCounter';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [advice, setAdvice] = useState<string>('');
+  const [count, setCount] = useState<number>(0);
+  async function getAdvice() {
+    const res = await fetch('https://api.adviceslip.com/advice');
+    const data = await res.json();
+    setAdvice(data.slip.advice);
+    setCount(count + 1);
+  }
+
+  useEffect(() => {
+    getAdvice();
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <h1 className="text-4xl">
+        {advice == '' ? 'Hi, please get a new advice' : advice}
+      </h1>
+      <button
+        className=" border-2 rounded-xl border-red-400 bg-red-700 text-white p-2"
+        onClick={() => {
+          getAdvice();
+        }}
+      >
+        Get advice
+      </button>
+      <MessageCounter messages={count} />
+    </div>
+  );
 }
 
-export default App
+export default App;
