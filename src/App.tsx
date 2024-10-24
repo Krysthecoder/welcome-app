@@ -3,7 +3,7 @@ import './App.css';
 import MessageCounter from './components/MessageCounter';
 
 function App() {
-  const [advice, setAdvice] = useState<string>('');
+  const [advice, setAdvice] = useState<string>(' ');
   const [count, setCount] = useState<number>(0);
   async function getAdvice() {
     const res = await fetch('https://api.adviceslip.com/advice');
